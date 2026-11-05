@@ -1,0 +1,13 @@
+services:
+  study-assistant:
+    build: .
+    ports:
+      - "8501:8501"
+    env_file:
+      - .env
+    environment:
+      CHROMA_DIR: /app/data/chroma
+      OLLAMA_BASE_URL: ${OLLAMA_BASE_URL:-http://host.docker.internal:11434}
+    volumes:
+      - ./data/chroma:/app/data/chroma
+    restart: unless-stopped
