@@ -1,71 +1,123 @@
 # RAG Study Assistant
 
-A document based study assistant built around the project in the resume: Python, LangChain, ChromaDB, Ollama, and Streamlit. Upload PDF, DOCX, or TXT study material, index its text, ask questions in natural language, and inspect the passages used to answer. Chat and embedding models run through your local Ollama service; the app does not require an OpenAI API key.
+Ask questions about your own study material (PDF, DOCX or TXT) and get short answers that cite the exact file and page they came from. The assistant runs on the **OpenAI API** or fully offline on **local Ollama models**, combines semantic and keyword search, refuses to answer when your documents don't contain the answer, and checks every citation before showing it.
 
-## What it does
+It ships with a reproducible benchmark, so its quality is measured rather than assumed.
 
-- Extracts text from PDF, DOCX, and TXT files and keeps page numbers where available.
-- Splits documents into overlapping chunks, creates local Ollama embeddings, and stores text plus metadata in persistent ChromaDB.
-- Retrieves the closest passages for each question and asks the chat model to answer only from retrieved material.
-- Uses concise few-shot examples to demonstrate grounded answers, citation style, and when to abstain.
-- Includes inline filename/page citations and an expandable view of the retrieved passages.
-- Keeps chat history for follow-up questions, offers a new-chat control, and replaces old chunks when the same filename is re-uploaded.
-- Rejects unsupported file types, empty/scanned documents, and files over the configured size limit.
-- Embeds and stores chunks in bounded batches, including documents spanning 1,000+ pages.
+## Results
+
+Benchmark: four arXiv papers (Transformer, BERT, ResNet, Adam; 58 pages, 288 chunks), **37 questions with known evidence** and **10 questions the papers cannot answer**. Measured with local models (`phi3` 3.8B for answers, `nomic-embed-text` for embeddings) on an Apple M5 laptop. Full output: [`eval/results/ollama.json`](eval/results/ollama.json).
+
+**Retrieval** (is the passage containing the answer in the top results?)
+
+| Method | Hit@1 | Hit@3 | Hit@5 | MRR |
+|---|---|---|---|---|
+| Dense vectors only | 40.5% | 62.2% | 78.4% | 0.547 |
+| **Hybrid: dense + BM25 (default)** | **51.4%** | **78.4%** | **86.5%** | **0.639** |
+
+**Answers**
+
+| Metric | Result |
+|---|---|
+| Answer accuracy (35 fact questions) | **85.7%** |
+| Answers that include a citation | **89.2%** |
+| Citations pointing to the page that holds the evidence | **70.3%** (46.0% before citation verification) |
+| Unanswerable questions correctly refused | **10 / 10** |
+| Answerable questions wrongly refused (held-out half) | **0 / 18** |
+| Median answer time / p95 | 3.6 s / 7.0 s |
+| Hybrid retrieval latency (median, after query embedding) | 1.9 ms |
+| Indexing speed | 7.2 pages/s (58 pages in 8 s) |
+
+The refusal cutoff was calibrated on a development half of the questions and reported on the held-out half. The previous fixed cutoff (0.72) refused **none** of the off-topic questions with this embedding model.
+
+## How it works
+
+```
+upload ─► parse (PDF/DOCX/TXT, keeps page numbers) ─► chunk (900 chars, 150 overlap)
+       ─► embed in batches of 64 ─► Chroma (persistent, cosine)
+
+question ─► embed ─► dense top-20 ─┐
+         └─► BM25 top-20 ──────────┴─► reciprocal rank fusion ─► top-5 passages
+         ─► refuse if the closest passage is beyond the calibrated cutoff
+         ─► grounded prompt (few-shot, temperature 0, chat history) ─► answer
+         ─► citation verification: each sentence re-linked to the passage that supports it
+```
+
+- **Two providers.** `LLM_PROVIDER=auto` uses OpenAI (`gpt-4o-mini`, `text-embedding-3-small`) when `OPENAI_API_KEY` is set and local Ollama (`phi3`, `nomic-embed-text`) otherwise. Each provider gets its own Chroma collection, because their vectors have different sizes.
+- **Hybrid retrieval** ([`app/retrieval.py`](app/retrieval.py)). Embeddings capture meaning but blur exact terms and numbers such as "28.4 BLEU" or "β2 = 0.98". An Okapi BM25 index over the same chunks catches those, and reciprocal rank fusion merges the two rankings without needing to calibrate their scores against each other.
+- **Calibrated refusal.** If even the closest passage is too far from the question, the assistant says the material doesn't cover it instead of guessing. The cutoff is set per embedding model from the benchmark.
+- **Citation verification** ([`app/citations.py`](app/citations.py)). Models often state the right fact but cite the wrong passage. After generation, each sentence is matched to the retrieved passage with the highest IDF-weighted term overlap and its citation is rewritten to point there; unsupported sentences are left uncited rather than given a misleading source.
+- **Large documents.** Embedding runs in bounded batches of 64, tested with a 1,024-page file. Re-uploading a file replaces its old chunks, and a failed upload never deletes the existing copy.
 
 ## Run locally
 
-Python 3.11 is recommended. Ollama must be installed and running.
+Python 3.10+.
 
 ```bash
 python -m venv .venv
-source .venv/bin/activate  # Windows: .venv\Scripts\activate
+source .venv/bin/activate          # Windows: .venv\Scripts\activate
 pip install -r requirements.txt
-cp .env.example .env
-```
-
-Download the default chat and embedding models (skip a command if that model is already installed):
-
-```bash
-ollama pull phi3:latest
-ollama pull nomic-embed-text
-```
-
-Confirm Ollama can see the models with `ollama list`, then run:
-
-```bash
+cp .env.example .env               # add OPENAI_API_KEY, or leave it empty to use Ollama
 streamlit run app/main.py
 ```
 
-Open the local URL printed by Streamlit (normally `http://localhost:8501`). Model downloads need internet access, but after the models are present, document indexing and questions run locally through Ollama.
+For offline mode, install [Ollama](https://ollama.com) and pull the models first:
 
-## Run with Docker
+```bash
+ollama pull phi3:latest
+ollama pull nomic-embed-text
+```
+
+### Docker
 
 ```bash
 cp .env.example .env
-ollama pull phi3:latest
-ollama pull nomic-embed-text
 docker compose up --build
 ```
 
-Open `http://localhost:8501`. Chroma data persists in `data/chroma/` on the host. Docker Desktop uses `host.docker.internal` to reach Ollama on your laptop; if the container cannot connect, run the app locally or configure Ollama to accept connections from Docker and set `OLLAMA_BASE_URL` in `.env` accordingly.
+Open `http://localhost:8501`. Indexed data persists in `data/chroma/`. In offline mode the container reaches Ollama on the host through `host.docker.internal`.
 
-## Run automated tests
-
-With the project virtual environment active:
+## Reproduce the benchmark
 
 ```bash
-python3 -m unittest discover -s tests -v
+python -m eval.run_eval              # retrieval and refusal metrics (about a minute)
+python -m eval.run_eval --generate   # also generate and grade every answer
 ```
 
-The automated suite uses a temporary Chroma database and mocked model calls, so it does not require downloading models or call Ollama. It covers PDF/DOCX/TXT parsing, 1,024-page indexing and batching, Chroma persistence and replacement, failure recovery, Nomic prefixes, semantic retrieval, abstention, citations, chat history, the full mocked RAG flow, and Streamlit startup.
+The script downloads the four papers from arXiv on first run, builds a fresh temporary index, verifies that every evidence phrase in [`eval/questions.json`](eval/questions.json) exists in the extracted text, and writes `eval/results/<provider>.json`. Run it after changing models to recalibrate the refusal cutoff.
+
+## Tests
+
+```bash
+python -m unittest discover -s tests -v
+```
+
+36 tests with a temporary Chroma database and mocked model calls, so no API key or model download is needed. They cover parsing, 1,024-page batched indexing, collection replacement and failure recovery, provider selection, OpenAI and Ollama model construction, BM25 and hybrid ranking, distance filtering, refusal, citation repair, chat history, the full RAG flow and Streamlit start-up.
 
 ## Configuration
 
-See `.env.example`. `OLLAMA_BASE_URL`, `OLLAMA_CHAT_MODEL`, `OLLAMA_EMBEDDING_MODEL`, `CHUNK_SIZE`, `CHUNK_OVERLAP`, `RETRIEVAL_K`, Chroma directory, collection name, and upload size limit can be configured there. `RETRIEVAL_K` is limited to 1-10. If you already created `.env` from the previous OpenAI version, change `CHROMA_COLLECTION` to `study_materials_ollama`; the old and new embedding models produce incompatible vectors.
+All settings live in `.env` (see [`.env.example`](.env.example)): provider and model names, `RETRIEVAL_MODE` (`hybrid`, `dense` or `keyword`), `RETRIEVAL_K` (1–10), `RELEVANCE_CUTOFF` (empty uses the calibrated default), `REPAIR_CITATIONS`, chunk size and overlap, Chroma location and the upload size limit.
 
-## Accuracy and limitations
+## Limitations
 
-Answers are constrained to retrieved passages, use temperature zero, and cite source filename and page. Retrieval is semantic cosine search. Nomic embeddings receive the model's recommended query/document prefixes. The similarity cutoff avoids answering from obviously unrelated passages, but it cannot guarantee correctness; check the displayed passages for important work. PDF pages that are image scans need OCR before ingestion. DOCX files do not have reliable page boundaries, so citations point to page 1. Larger Ollama models can improve answer quality but need more RAM and disk space.
+- The benchmark questions reuse the papers' terminology, which favours keyword search; keyword-only ranking scored slightly higher than hybrid here (Hit@5 89.2%). Hybrid stays the default because it is more robust to questions phrased in your own words.
+- 47 questions is a small benchmark; treat differences of a few points as indicative.
+- Scanned PDFs need OCR first. DOCX files have no reliable page boundaries, so their citations point to page 1.
+- The local index contains your study text. Keep `data/chroma/` and `.env` private; both are git-ignored.
 
-The local Chroma folder contains extracted study content. Keep it private and remove it when you no longer need the indexed material. Do not commit `.env` or `data/chroma/`.
+## Project structure
+
+```
+app/
+  main.py         Streamlit interface: upload, library, chat
+  config.py       settings, provider selection, calibrated defaults
+  ingestion.py    parsing, chunking, batched embedding, Chroma storage
+  retrieval.py    BM25, dense and hybrid (RRF) retrieval
+  qa.py           refusal gate, grounded prompt, answer generation
+  citations.py    post-generation citation verification
+eval/
+  questions.json  benchmark questions, evidence phrases and answers
+  run_eval.py     benchmark runner
+  results/        saved benchmark results
+tests/            unit and integration tests
+```

@@ -6,3 +6,4 @@ __pycache__/
 data/chroma/
 data/uploads/
 .DS_Store
+eval/corpus/

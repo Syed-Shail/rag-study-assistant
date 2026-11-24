@@ -10,7 +10,7 @@ from langchain_core.runnables import RunnableLambda
 
 from app.config import Settings
 from app.ingestion import get_collection
-from app.qa import answer_question
+from app.qa import answer_question, chat_model
 
 
 class FakeQueryEmbeddings:
@@ -83,6 +83,18 @@ class GroundedQaTests(unittest.TestCase):
         with self.assertRaisesRegex(ValueError, "Upload at least one study document"):
             answer_question("question", [], self.settings)
 
+
+
+class ChatModelTests(unittest.TestCase):
+    def test_openai_provider_builds_a_deterministic_openai_chat_model(self):
+        with patch("langchain_openai.ChatOpenAI") as chat:
+            chat_model(Settings(provider="openai", chat_model="gpt-4o-mini"))
+        chat.assert_called_once_with(model="gpt-4o-mini", temperature=0, max_tokens=300)
+
+    def test_ollama_provider_builds_a_local_chat_model(self):
+        with patch("app.qa.ChatOllama") as chat:
+            chat_model(Settings(provider="ollama"))
+        chat.assert_called_once_with(model="phi3:latest", base_url="http://localhost:11434", temperature=0, num_predict=180)
 
 if __name__ == "__main__":
     unittest.main()

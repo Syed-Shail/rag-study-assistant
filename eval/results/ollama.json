@@ -1,0 +1,561 @@
+{
+  "provider": "ollama",
+  "chat_model": "phi3:latest",
+  "embedding_model": "nomic-embed-text",
+  "k": 5,
+  "corpus": {
+    "documents": 4,
+    "pages": 58,
+    "chunks": 288,
+    "ingest_seconds": 8.09,
+    "pages_per_second": 7.17
+  },
+  "retrieval": {
+    "questions": 37,
+    "by_method": {
+      "dense": {
+        "hit_at_1": 0.4054,
+        "hit_at_3": 0.6216,
+        "hit_at_5": 0.7838,
+        "mrr": 0.5468
+      },
+      "keyword": {
+        "hit_at_1": 0.5676,
+        "hit_at_3": 0.7568,
+        "hit_at_5": 0.8919,
+        "mrr": 0.6856
+      },
+      "hybrid": {
+        "hit_at_1": 0.5135,
+        "hit_at_3": 0.7838,
+        "hit_at_5": 0.8649,
+        "mrr": 0.6392
+      }
+    },
+    "hybrid_median_latency_ms": 1.9,
+    "hybrid_p95_latency_ms": 2.0
+  },
+  "abstention_gate": {
+    "calibrated_cutoff": 0.2911,
+    "previous_default_cutoff": 0.72,
+    "test_split": {
+      "unanswerable_correctly_abstained": 1.0,
+      "answerable_wrongly_blocked": 0.0
+    },
+    "dev_split": {
+      "unanswerable_correctly_abstained": 1.0,
+      "answerable_wrongly_blocked": 0.1053
+    },
+    "with_previous_default": {
+      "unanswerable_correctly_abstained": 0.0,
+      "answerable_wrongly_blocked": 0.0
+    }
+  },
+  "per_question": [
+    {
+      "id": "tf-01",
+      "rank": 1,
+      "best_distance": 0.1776
+    },
+    {
+      "id": "tf-02",
+      "rank": null,
+      "best_distance": 0.2838
+    },
+    {
+      "id": "tf-03",
+      "rank": 1,
+      "best_distance": 0.2526
+    },
+    {
+      "id": "tf-04",
+      "rank": 3,
+      "best_distance": 0.1902
+    },
+    {
+      "id": "tf-05",
+      "rank": 1,
+      "best_distance": 0.2648
+    },
+    {
+      "id": "tf-06",
+      "rank": 1,
+      "best_distance": 0.2589
+    },
+    {
+      "id": "tf-07",
+      "rank": null,
+      "best_distance": 0.2662
+    },
+    {
+      "id": "tf-08",
+      "rank": 2,
+      "best_distance": 0.2737
+    },
+    {
+      "id": "tf-09",
+      "rank": 1,
+      "best_distance": 0.2325
+    },
+    {
+      "id": "tf-10",
+      "rank": 5,
+      "best_distance": 0.2864
+    },
+    {
+      "id": "tf-11",
+      "rank": 1,
+      "best_distance": 0.2561
+    },
+    {
+      "id": "tf-12",
+      "rank": 3,
+      "best_distance": 0.288
+    },
+    {
+      "id": "bert-01",
+      "rank": 1,
+      "best_distance": 0.2646
+    },
+    {
+      "id": "bert-02",
+      "rank": null,
+      "best_distance": 0.2429
+    },
+    {
+      "id": "bert-03",
+      "rank": 3,
+      "best_distance": 0.2635
+    },
+    {
+      "id": "bert-04",
+      "rank": 1,
+      "best_distance": 0.228
+    },
+    {
+      "id": "bert-05",
+      "rank": 2,
+      "best_distance": 0.2321
+    },
+    {
+      "id": "bert-06",
+      "rank": 1,
+      "best_distance": 0.1777
+    },
+    {
+      "id": "bert-07",
+      "rank": 1,
+      "best_distance": 0.2264
+    },
+    {
+      "id": "bert-08",
+      "rank": 4,
+      "best_distance": 0.2563
+    },
+    {
+      "id": "bert-09",
+      "rank": null,
+      "best_distance": 0.2182
+    },
+    {
+      "id": "bert-10",
+      "rank": 2,
+      "best_distance": 0.2755
+    },
+    {
+      "id": "res-01",
+      "rank": null,
+      "best_distance": 0.181
+    },
+    {
+      "id": "res-02",
+      "rank": 3,
+      "best_distance": 0.207
+    },
+    {
+      "id": "res-03",
+      "rank": 3,
+      "best_distance": 0.1684
+    },
+    {
+      "id": "res-04",
+      "rank": 1,
+      "best_distance": 0.1793
+    },
+    {
+      "id": "res-05",
+      "rank": 1,
+      "best_distance": 0.3291
+    },
+    {
+      "id": "res-06",
+      "rank": 1,
+      "best_distance": 0.227
+    },
+    {
+      "id": "res-07",
+      "rank": 5,
+      "best_distance": 0.2415
+    },
+    {
+      "id": "res-08",
+      "rank": 3,
+      "best_distance": 0.2911
+    },
+    {
+      "id": "adam-01",
+      "rank": 1,
+      "best_distance": 0.3747
+    },
+    {
+      "id": "adam-02",
+      "rank": 2,
+      "best_distance": 0.2725
+    },
+    {
+      "id": "adam-03",
+      "rank": 1,
+      "best_distance": 0.2321
+    },
+    {
+      "id": "adam-04",
+      "rank": 1,
+      "best_distance": 0.2524
+    },
+    {
+      "id": "adam-05",
+      "rank": 1,
+      "best_distance": 0.2152
+    },
+    {
+      "id": "adam-06",
+      "rank": 1,
+      "best_distance": 0.2556
+    },
+    {
+      "id": "adam-07",
+      "rank": 1,
+      "best_distance": 0.222
+    }
+  ],
+  "answers": {
+    "graded_questions": 35,
+    "accuracy": 0.8571,
+    "answers_with_citations": 0.8919,
+    "citations_pointing_to_evidence_page": 0.7027,
+    "unanswerable_abstained": 1.0,
+    "median_answer_seconds": 3.61,
+    "p95_answer_seconds": 7.0
+  },
+  "answer_log": [
+    {
+      "id": "tf-01",
+      "correct": true,
+      "cited": true,
+      "citation_correct": true,
+      "answer": "The Transformer encoder stack is composed of 6 identical layers [Source: 1706.03762.pdf, p. 3]."
+    },
+    {
+      "id": "tf-02",
+      "correct": true,
+      "cited": true,
+      "citation_correct": false,
+      "answer": "The base Transformer model outputs have a dimensionality of 512 [Source: 1810.04805.pdf, p. 8]."
+    },
+    {
+      "id": "tf-03",
+      "correct": true,
+      "cited": true,
+      "citation_correct": true,
+      "answer": "The base Transformer uses 8 parallel attention layers, or heads [Source: 1706.03762.pdf, p. 5]."
+    },
+    {
+      "id": "tf-04",
+      "correct": null,
+      "cited": true,
+      "citation_correct": true,
+      "answer": "The scaling factor of 1/√d_k is used in scaled dot-product attention to prevent the dot products from growing too large in magnitude, which can push the softmax function into regions where it has extremely small gradients [Source: 1706.03762.pdf, p. 4]. This scaling helps to maintain the stability of the attention mechanism."
+    },
+    {
+      "id": "tf-05",
+      "correct": true,
+      "cited": true,
+      "citation_correct": true,
+      "answer": "The big Transformer achieved a BLEU score of 28.4 on the WMT 2014 English-to-German translation task [Source: 1706.03762.pdf, p. 8]."
+    },
+    {
+      "id": "tf-06",
+      "correct": true,
+      "cited": true,
+      "citation_correct": true,
+      "answer": "The value of label smoothing used to train the Transformer was ϵls = 0.1 [36] [Source: 1706.03762.pdf, p. 8]."
+    },
+    {
+      "id": "tf-07",
+      "correct": true,
+      "cited": true,
+      "citation_correct": true,
+      "answer": "The Transformer was trained using the Adam optimizer with beta1 set to 0.9 and beta2 set to 0.98, as mentioned in the study material [Source: 1706.03762.pdf, p. 7]."
+    },
+    {
+      "id": "tf-08",
+      "correct": false,
+      "cited": true,
+      "citation_correct": true,
+      "answer": "The Transformer learning rate schedule used 10,000 warmup steps [Source: 1706.03762.pdf, p. 7]."
+    },
+    {
+      "id": "tf-09",
+      "correct": true,
+      "cited": true,
+      "citation_correct": true,
+      "answer": "The base Transformer model used a dropout rate of Pdrop = 0.1 [Source: 1706.03762.pdf, p. 8]."
+    },
+    {
+      "id": "tf-10",
+      "correct": true,
+      "cited": true,
+      "citation_correct": true,
+      "answer": "The Transformer was trained on one machine with 8 NVIDIA P100 GPUs [Source: 1706.03762.pdf, p. 7]."
+    },
+    {
+      "id": "tf-11",
+      "correct": true,
+      "cited": true,
+      "citation_correct": true,
+      "answer": "The Transformer uses sine and cosine functions of different frequencies for its positional encodings [Source: 1706.03762.pdf, p. 6]. Specifically, for each position pos and dimension i, the positional encoding is calculated as follows:\n\nP E(pos,2i) = sin(pos/100002i/dmodel )\nP E(pos,2i+1) = cos(pos/100002i/dmodel )\n\nwhere pos is the position, i is the dimension, and dmodel is the model's dimension [Source: 1706.03762.pdf, p. 6]. This choice of positional encoding allows the model to learn to attend by relative positions [Source: 1706.03762.pdf, p. 6]."
+    },
+    {
+      "id": "tf-12",
+      "correct": true,
+      "cited": true,
+      "citation_correct": true,
+      "answer": "The inner-layer dimensionality of the Transformer's position-wise feed-forward network is dff = 2048 [Source: 1706.03762.pdf, p. 5]."
+    },
+    {
+      "id": "bert-01",
+      "correct": true,
+      "cited": true,
+      "citation_correct": true,
+      "answer": "BERT stands for Bidirectional Encoder Representations from Transformers [Source: 1810.04805.pdf, p. 1]."
+    },
+    {
+      "id": "bert-02",
+      "correct": true,
+      "cited": true,
+      "citation_correct": false,
+      "answer": "During pre-training, BERT uses a uniform masking rate of 15% for WordPiece tokens [Source: 1810.04805.pdf, p. 13]."
+    },
+    {
+      "id": "bert-03",
+      "correct": true,
+      "cited": true,
+      "citation_correct": false,
+      "answer": "BERT-Large has 24 layers, a hidden size of 1024, and 16 attention heads [Source: 1810.04805.pdf, p. 9]."
+    },
+    {
+      "id": "bert-04",
+      "correct": true,
+      "cited": true,
+      "citation_correct": true,
+      "answer": "The BERT-Base model has a total of 110 million parameters [Source: 1810.04805.pdf, p. 8]."
+    },
+    {
+      "id": "bert-05",
+      "correct": false,
+      "cited": true,
+      "citation_correct": false,
+      "answer": "Unlike Peters et al [Source: 1810.04805.pdf, p. 1]. (2018a) and Radford et al [Source: 1810.04805.pdf, p. 4]. (2018), we do not use traditional left-to-right or\nright-to-left language models to pre-train BERT [Source: 1810.04805.pdf, p. 4]. Instead, we pre-train BERT using two unsupervised tasks, described in this section [Source: 1810.04805.pdf, p. 4]. This step\nis presented in the left part of Figure 1 [Source: 1810.04805.pdf, p. 4]. Task #1: Masked LM Intuitively, it is reason-\nable to believe that a deep bidirectional model is\nstrictly more powerful than either a left-to-right\nmodel or the shallow concatenation of a left-to-\nright and a right-to [Source: 1810.04805.pdf, p. 4]"
+    },
+    {
+      "id": "bert-06",
+      "correct": true,
+      "cited": true,
+      "citation_correct": true,
+      "answer": "The second unsupervised pre-training task used by BERT is the \"next sentence prediction\" task [Source: 1810.04805.pdf, p. 2]."
+    },
+    {
+      "id": "bert-07",
+      "correct": true,
+      "cited": true,
+      "citation_correct": true,
+      "answer": "The special token that is always the first token of every BERT input sequence is [CLS] [Source: 1810.04805.pdf, p. 4]."
+    },
+    {
+      "id": "bert-08",
+      "correct": true,
+      "cited": true,
+      "citation_correct": false,
+      "answer": "BERT achieved a GLUE score of 80.5% [Source: 1810.04805.pdf, p. 6]"
+    },
+    {
+      "id": "bert-09",
+      "correct": true,
+      "cited": true,
+      "citation_correct": false,
+      "answer": "According to the study material, during the masking procedure for MLM in BERT, 80% of the time, the target token is replaced with the [MASK] token [Source: 1810.04805.pdf, p. 12]."
+    },
+    {
+      "id": "bert-10",
+      "correct": true,
+      "cited": true,
+      "citation_correct": true,
+      "answer": "BERT uses a WordPiece vocabulary of 30,000 tokens for the English language [Source: 1810.04805.pdf, p. 4]."
+    },
+    {
+      "id": "res-01",
+      "correct": true,
+      "cited": true,
+      "citation_correct": true,
+      "answer": "The ResNet paper identifies an optimization difficulty, often referred to as the degradation problem, which occurs when plain networks become deeper. This problem manifests as higher training errors as the network depth increases, which is contrary to the expectation that deeper networks would perform better [Source: 1512.03385.pdf, p. 1]. This issue is not caused by vanishing gradients, as the paper verifies that backward propagated gradients maintain healthy norms with Batch Normalization (BN) in place [Source: 1512.03385.pdf, p. 5]. The paper suggests that the residual functions in ResNets, which are designed to be closer to zero, help mitigate this problem [Source: 1512.03385.pdf, p. 8]."
+    },
+    {
+      "id": "res-02",
+      "correct": true,
+      "cited": true,
+      "citation_correct": true,
+      "answer": "The ResNet ensemble achieved a top-5 error of 3.57% on the ImageNet test set [Source: 1512.03385.pdf, p. 7]."
+    },
+    {
+      "id": "res-03",
+      "correct": true,
+      "cited": true,
+      "citation_correct": false,
+      "answer": "The maximum depth of the residual nets evaluated on ImageNet is 152 layers [Source: 1512.03385.pdf, p. 2]."
+    },
+    {
+      "id": "res-04",
+      "correct": true,
+      "cited": true,
+      "citation_correct": true,
+      "answer": "In a residual block, the stacked layers learn a residual function F(x) := H(x) −x, where H(x) is the underlying mapping to be learned [Source: 1512.03385.pdf, p. 3]. The original function is then represented as F(x)+ x [Source: 1512.03385.pdf, p. 3]."
+    },
+    {
+      "id": "res-05",
+      "correct": false,
+      "cited": false,
+      "citation_correct": false,
+      "answer": "I couldn’t find relevant information in the uploaded study material. Try rephrasing the question or adding the relevant notes."
+    },
+    {
+      "id": "res-06",
+      "correct": true,
+      "cited": true,
+      "citation_correct": true,
+      "answer": "No, identity shortcut connections do not add extra parameters or computational complexity [Source: 1512.03385.pdf, p. 6]. They simply perform identity mapping and add their outputs to the outputs of the stacked layers [Source: 1512.03385.pdf, p. 2]."
+    },
+    {
+      "id": "res-07",
+      "correct": true,
+      "cited": true,
+      "citation_correct": true,
+      "answer": "The ResNet ImageNet training starts with a learning rate of 0.1 [Source: 1512.03385.pdf, p. 4]. It is divided by 10 when the error plateaus, as per the training procedure outlined in the study material [Source: 1512.03385.pdf, p. 4]."
+    },
+    {
+      "id": "res-08",
+      "correct": true,
+      "cited": true,
+      "citation_correct": true,
+      "answer": "The mini-batch size used to train ResNet on ImageNet was 256 [Source: 1512.03385.pdf, p. 4]."
+    },
+    {
+      "id": "adam-01",
+      "correct": false,
+      "cited": false,
+      "citation_correct": false,
+      "answer": "I couldn’t find relevant information in the uploaded study material. Try rephrasing the question or adding the relevant notes."
+    },
+    {
+      "id": "adam-02",
+      "correct": true,
+      "cited": true,
+      "citation_correct": true,
+      "answer": "The default settings for Adam are alpha = 0.001, beta1 = 0.9, beta2 = 0.999, and epsilon = 1e-8 [Source: 1412.6980.pdf, p. 2]."
+    },
+    {
+      "id": "adam-03",
+      "correct": null,
+      "cited": false,
+      "citation_correct": false,
+      "answer": "Adam applies bias correction to its moment estimates to counteract the initialization bias that can lead to inaccurate estimates of the first and second moments of the gradient, especially in the early stages of training. This bias correction helps in stabilizing the learning process and improves convergence."
+    },
+    {
+      "id": "adam-04",
+      "correct": true,
+      "cited": true,
+      "citation_correct": true,
+      "answer": "The paper proposes a variant of Adam based on the infinity norm called AdaMax, as mentioned in the study material [Source: 1412.6980.pdf, p. 9]."
+    },
+    {
+      "id": "adam-05",
+      "correct": true,
+      "cited": true,
+      "citation_correct": true,
+      "answer": "According to the original text \"\nPublished as a conference paper at ICLR 2015\nlarge datasets and/or high-dimensional parameter spaces [Source: 1412.6980.pdf, p. 10]. The method combines the advantages of\ntwo recently popular optimization methods: the ability of AdaGrad to deal with sparse gradients,\nand the ability of RMSProp to deal with non-stationary objectives [Source: 1412.6980.pdf, p. 10]. The method is straightforward\nto implement and requires little memory [Source: 1412.6980.pdf, p. 10]. The experiments conﬁrm the analysis on the rate of con-\nvergence in convex problems [Source: 1412.6980.pdf, p. 10]. Overall, we found Adam to be robust and well-suited to a wide range\nof non-convex optimization problems in the ﬁeld machine learning [Source: 1412.6980.pdf, p. 10]. 9 A CKNOWLEDGMENTS\nThis paper would probably not have existed without the support of Google Deepmind [Source: 1412.6980.pdf, p. 10]. We would\nlike to give special thanks [Source: 1412.6980.pdf, p. 10]"
+    },
+    {
+      "id": "adam-06",
+      "correct": false,
+      "cited": false,
+      "citation_correct": false,
+      "answer": "The default stepsize for AdaMax is not explicitly stated in the provided material."
+    },
+    {
+      "id": "adam-07",
+      "correct": true,
+      "cited": true,
+      "citation_correct": true,
+      "answer": "The magnitude of AdaMax parameter updates is bounded by α, as stated in the retrieved material [Source: 1412.6980.pdf, p. 9]."
+    },
+    {
+      "id": "out-01",
+      "abstained": true,
+      "answer": "I couldn’t find relevant information in the uploaded study material. Try rephrasing the question or adding the relevant notes."
+    },
+    {
+      "id": "out-02",
+      "abstained": true,
+      "answer": "I couldn’t find relevant information in the uploaded study material. Try rephrasing the question or adding the relevant notes."
+    },
+    {
+      "id": "out-03",
+      "abstained": true,
+      "answer": "I couldn’t find relevant information in the uploaded study material. Try rephrasing the question or adding the relevant notes."
+    },
+    {
+      "id": "out-04",
+      "abstained": true,
+      "answer": "I couldn’t find relevant information in the uploaded study material. Try rephrasing the question or adding the relevant notes."
+    },
+    {
+      "id": "out-05",
+      "abstained": true,
+      "answer": "I couldn’t find relevant information in the uploaded study material. Try rephrasing the question or adding the relevant notes."
+    },
+    {
+      "id": "out-06",
+      "abstained": true,
+      "answer": "I couldn’t find relevant information in the uploaded study material. Try rephrasing the question or adding the relevant notes."
+    },
+    {
+      "id": "out-07",
+      "abstained": true,
+      "answer": "I couldn’t find relevant information in the uploaded study material. Try rephrasing the question or adding the relevant notes."
+    },
+    {
+      "id": "out-08",
+      "abstained": true,
+      "answer": "I couldn’t find relevant information in the uploaded study material. Try rephrasing the question or adding the relevant notes."
+    },
+    {
+      "id": "out-09",
+      "abstained": true,
+      "answer": "I couldn’t find relevant information in the uploaded study material. Try rephrasing the question or adding the relevant notes."
+    },
+    {
+      "id": "out-10",
+      "abstained": true,
+      "answer": "I couldn’t find relevant information in the uploaded study material. Try rephrasing the question or adding the relevant notes."
+    }
+  ]
+}

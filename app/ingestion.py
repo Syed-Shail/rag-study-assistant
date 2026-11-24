@@ -18,12 +18,25 @@ SUPPORTED_TYPES = {"pdf", "docx", "txt"}
 
 
 class StudyEmbeddings:
-    """Ollama embeddings with the task prefixes expected by Nomic models."""
+    """Document and query embeddings from OpenAI or a local Ollama model.
 
-    def __init__(self, model: str, base_url: str):
+    Nomic models expect task prefixes on their inputs, so those are added automatically.
+    """
+
+    def __init__(self, model: str, base_url: str, provider: str = "ollama"):
         self.model = model
-        self.client = OllamaEmbeddings(model=model, base_url=base_url)
+        self.provider = provider
+        if provider == "openai":
+            from langchain_openai import OpenAIEmbeddings
+
+            self.client = OpenAIEmbeddings(model=model)
+        else:
+            self.client = OllamaEmbeddings(model=model, base_url=base_url)
         self.nomic = model.lower().startswith("nomic-embed-text")
+
+    @classmethod
+    def from_settings(cls, settings: Settings) -> "StudyEmbeddings":
+        return cls(settings.embedding_model, settings.ollama_base_url, provider=settings.provider)
 
     def embed_documents(self, texts: list[str]) -> list[list[float]]:
         if self.nomic:
@@ -144,10 +157,10 @@ def ingest_document(filename: str, raw: bytes, settings: Settings) -> IngestResu
     collection = get_collection(settings)
     safe_name = Path(filename.replace("\\", "/")).name
     # Re-uploading the same filename replaces its old chunks and avoids stale duplicates.
-    embedder = StudyEmbeddings(settings.embedding_model, settings.ollama_base_url)
+    embedder = StudyEmbeddings(settings.embedding_model, settings.ollama_base_url, provider=settings.provider)
     texts = [text for text, _, _ in documents]
     embeddings = []
-    # Bound each local Ollama request for large documents, including 1K+ page files.
+    # Embed in bounded batches so large documents, including 1K+ page files, stay within request limits.
     for _, text_batch in _batches(texts):
         embeddings.extend(embedder.embed_documents(text_batch))
     # Preserve an existing indexed copy if parsing or the embedding request fails.

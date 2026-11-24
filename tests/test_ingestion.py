@@ -117,6 +117,15 @@ class StudyEmbeddingTests(unittest.TestCase):
         ollama.return_value.embed_query.assert_called_once_with("question")
 
 
+    def test_openai_provider_uses_openai_embeddings_without_task_prefixes(self):
+        with patch("langchain_openai.OpenAIEmbeddings") as openai_embeddings:
+            embeddings = StudyEmbeddings("text-embedding-3-small", "http://unused", provider="openai")
+            embeddings.embed_documents(["lecture notes"])
+            embeddings.embed_query("question")
+        openai_embeddings.assert_called_once_with(model="text-embedding-3-small")
+        openai_embeddings.return_value.embed_documents.assert_called_once_with(["lecture notes"])
+        openai_embeddings.return_value.embed_query.assert_called_once_with("question")
+
 class PersistentIngestionTests(unittest.TestCase):
     def setUp(self):
         self.temp_dir = tempfile.TemporaryDirectory()

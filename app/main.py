@@ -33,7 +33,7 @@ try:
     settings = get_settings()
 except (ValueError, OSError) as exc:
     st.error(str(exc))
-    st.info("Copy `.env.example` to `.env`, make sure Ollama is running, then restart the app.")
+    st.info("Copy `.env.example` to `.env`, add an OpenAI API key or start Ollama, then restart the app.")
     st.stop()
 
 if "messages" not in st.session_state:
@@ -83,7 +83,8 @@ with st.sidebar:
     if st.button("New chat", use_container_width=True):
         st.session_state.messages = []
         st.rerun()
-    st.caption("Your indexed text stays in this project folder. Chat and embeddings use the Ollama service at the configured URL.")
+    provider_label = "OpenAI" if settings.provider == "openai" else f"local Ollama at {settings.ollama_base_url}"
+    st.caption(f"Your indexed text stays in this project folder. Answers use {settings.chat_model} via {provider_label}.")
 
 for message in st.session_state.messages:
     with st.chat_message(message["role"]):
@@ -119,8 +120,11 @@ if question:
         except Exception as exc:
             error = f"I couldn’t complete that request: {exc}"
             st.error(error)
-            st.info(
-                f"Check that Ollama is running at `{settings.ollama_base_url}` and that both configured models are installed. "
-                f"You can install them with `ollama pull {settings.chat_model}` and `ollama pull {settings.embedding_model}`."
-            )
+            if settings.provider == "openai":
+                st.info("Check that `OPENAI_API_KEY` is valid and that the configured OpenAI models are available to your account.")
+            else:
+                st.info(
+                    f"Check that Ollama is running at `{settings.ollama_base_url}` and that both configured models are installed. "
+                    f"You can install them with `ollama pull {settings.chat_model}` and `ollama pull {settings.embedding_model}`."
+                )
             st.session_state.messages.append({"role": "assistant", "content": error, "sources": []})
